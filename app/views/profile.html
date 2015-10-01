@@ -17,8 +17,11 @@
 			border-radius: 10px;
 			margin-top: 60px;
 		}
-		#map, #chat{
+		#map, #send{
 			display: inline-block;
+		}
+		#send{
+			vertical-align: top;
 		}
 		#chat{
 			vertical-align: top;
@@ -27,8 +30,8 @@
 			margin-top: 80px;
 		}
 		  .navbar{
-		  	color: #E6F1F6;
-  }
+		  	background-color: #323C46;
+ 		}
 	</style>
 	<script>
 		function initMap() {
@@ -51,7 +54,7 @@
 			<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
 			<span class="sr-only">Toggle navigation</span>
 			</button>
-			<a class="navbar-brand" href="#">uWhere</a>
+			<a class="navbar-brand" href="/">uWhere</a>
 		</div>
 		<div class="container">
 			<button type="button" class="btn btn-default navbar-btn navbar-right"><a href="/logout">Logout</a></button>
@@ -61,20 +64,28 @@
 			<h1>Hello {{session['name']}}!</h1>
 		</div>
 		<div id="map"></div>
-		<div id="chat">
+		<div id="send">
 			<h3>Friend's Phone Numbers:</h3>
 			<form action="">
-				<textarea cols="50" rows="10"></textarea>
+				<input type="text" name="numbers" placeholder="Phone numbers">
+				<textarea cols="50" rows="10" placeholder=""></textarea>
 				<input type="submit" value="Send to Friends">
+			</form>
+		</div>
+		<div id="location">
+			<h3>Location:</h3>
+			<form action="">
+				<textarea cols="50" rows="10"></textarea>
+				<input type="submit" value="Add Destination">
 			</form>
 		</div>
 		<div id="past">
 			<h1>Past Destinations</h1>
 			<table class="table table-hover">
 				<tr>
-					<th>Homeys Meeting Place</th>
-					<th>Which Homey Made It</th>
-					<th>When homeys went</th>
+					<th>Meeting Spot</th>
+					<th>Meet Creator</th>
+					<th>Meet Date</th>
 				</tr>
 			</table>
 		</div>
