@@ -49,3 +49,6 @@ class Uwhere(Model):
 		else:
 			errors.append('Invalid Email/Password')
 			return {'status': False, 'errors': errors}
+
+	def friends_list(self):
+		return self.db.query_db("SELECT * FROM users ORDER BY name DESC")

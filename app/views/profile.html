@@ -8,6 +8,12 @@
 			margin: 0;
 			padding: 0;
 		}
+		#friends{
+			height: 210px;
+		}
+		#numberbox,{
+			vertical-align: top;
+		}
 		#wrapper{
 		margin: 0px auto;
 		background: -webkit-linear-gradient(#E6F1F6, white); 
@@ -21,11 +27,16 @@
 			border-radius: 10px;
 			margin-top: 60px;
 		}
-		#map, #chat{
+		#map, #right{
 			display: inline-block;
 		}
-		#chat{
+		#map{
 			vertical-align: top;
+			margin-top: 0px;
+		}
+		#right{
+			vertical-align: top;
+			height: 500px;
 		}
 		#hello{
 			padding-top: 30px;
@@ -128,11 +139,22 @@ function initMap() {
       address = [
         (place.address_components[0] && place.address_components[0].short_name || ''),
         (place.address_components[1] && place.address_components[1].short_name || ''),
-        (place.address_components[2] && place.address_components[2].short_name || '')
+        (place.address_components[2] && place.address_components[2].short_name || ''),
+        (place.address_components[3] && place.address_components[3].short_name || ''),
+       (place.address_components[4] && place.address_components[4].short_name || '')
       ].join(' ');
     }
 
     infowindow.setContent('<div><strong>' + place.name + '</strong><br>' + address);
+    var name = place.name
+    var addy = address;
+
+   	console.log(name);
+   	console.log(addy);
+
+   	var i = document.getElementById('messagebox');
+   	i.innerHTML = "Place: " + name + " "+ "Address: " + addy;
+
     infowindow.open(map, marker);
   });
 
@@ -192,20 +214,38 @@ function initMap() {
 			<h1>Hello {{session['name']}}!</h1>
 		</div>
 		<div id="map"></div>
+		<div id="right">
 		<div id="chat">
-			<h3>Friend's Phone Numbers:</h3>
-			<form action="">
-				<textarea cols="50" rows="10"></textarea>
+			<h1>Send your friends the spot:</h1>
+			<form action="/send" method="post">
+				<input id="numberbox" type="text" name="numbers" placeholder="Phone numbers">
+				<textarea id="messagebox" name="message" cols="50" rows="10" placeholder="Use the map to retrieve place and address"></textarea>
 				<input type="submit" value="Send to Friends">
 			</form>
+			<div id="friends" style="overflow:scroll">
+				<h1>Friend's List</h1>
+			<table class="table table-hover">
+				<tr>
+					<th>Name</th>
+					<th>Phone Number</th>
+				</tr>
+				{% for friend in friends %}
+				<tr>
+					<td>{{friend['name']}}</td>
+					<td>{{friend['phone']}} <a href=""><span class="glyphicon glyphicon-plus-sign"></span></a></td>
+				</tr>
+				{% endfor %}
+			</table>
+			</div>
 		</div>
+		</div> <!-- end of right -->
 		<div id="past">
 			<h1>Past Destinations</h1>
 			<table class="table table-hover">
 				<tr>
-					<th>Homeys Meeting Place</th>
-					<th>Which Homey Made It</th>
-					<th>When homeys went</th>
+					<th>Meeting Place</th>
+					<th>Creator Name</th>
+					<th>When visited</th>
 				</tr>
 			</table>
 		</div>
