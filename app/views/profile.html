@@ -2,6 +2,17 @@
 <head>
 	<title>uWhere</title>
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+	<script src="https://code.jquery.com/jquery-2.1.3.min.js"></script>
+	<script>
+		$(document).ready(function(){
+			$('').submit(function(){
+				$.post('/posts/create', $(this).serialize(), function(res) {
+					$('#posts').html(res);
+				});
+				return false;
+			});
+		});
+	</script>
 	<style>
 		html, body {
 			height: 100%;
@@ -9,9 +20,9 @@
 			padding: 0;
 		}
 		#friends{
-			height: 210px;
+			height: 230px;
 		}
-		#numberbox,{
+		#numbers{
 			vertical-align: top;
 		}
 		#wrapper{
@@ -22,21 +33,24 @@
 	    background: linear-gradient(#E6F1F6, white);
 		}
 		#map {
-			height: 500px;
-			width: 700px;
+			height: 80%;
+			width: 40%;
 			border-radius: 10px;
-			margin-top: 60px;
+			margin-top: 1px;
+			border: 1px solid silver;
+			vertical-align: top;
+			margin-left: 60px;
 		}
 		#map, #right{
 			display: inline-block;
 		}
-		#map{
-			vertical-align: top;
-			margin-top: 0px;
-		}
 		#right{
 			vertical-align: top;
-			height: 500px;
+			height: 625px;
+			margin-left: 50px;
+			border: 1px solid silver;
+			border-radius: 10px;
+			padding: 10px;
 		}
 		#hello{
 			padding-top: 30px;
@@ -146,14 +160,14 @@ function initMap() {
     }
 
     infowindow.setContent('<div><strong>' + place.name + '</strong><br>' + address);
-    var name = place.name
+    var name = place.name;
     var addy = address;
 
    	console.log(name);
    	console.log(addy);
 
    	var i = document.getElementById('messagebox');
-   	i.innerHTML = "Place: " + name + " "+ "Address: " + addy;
+   	i.innerHTML = "Place: " + name + ",  "+ "Address: " + addy;
 
     infowindow.open(map, marker);
   });
@@ -217,13 +231,13 @@ function initMap() {
 		<div id="right">
 		<div id="chat">
 			<h1>Send your friends the spot:</h1>
-			<form action="/send" method="post">
-				<input id="numberbox" type="text" name="numbers" placeholder="Phone numbers">
+			<form action="/send/{{session['id']}}" method="post">
+				<textarea id="numberbox" name="numbers" cols="12" rows="10" placeholder="Phone numbers">{{friendsList}}</textarea>
 				<textarea id="messagebox" name="message" cols="50" rows="10" placeholder="Use the map to retrieve place and address"></textarea>
 				<input type="submit" value="Send to Friends">
 			</form>
 			<div id="friends" style="overflow:scroll">
-				<h1>Friend's List</h1>
+				<h1>Phonebook</h1>
 			<table class="table table-hover">
 				<tr>
 					<th>Name</th>
@@ -232,7 +246,7 @@ function initMap() {
 				{% for friend in friends %}
 				<tr>
 					<td>{{friend['name']}}</td>
-					<td>{{friend['phone']}} <a href=""><span class="glyphicon glyphicon-plus-sign"></span></a></td>
+					<td>{{friend['phone']}} <a id="stupid" href="/add/{{friend['phone']}}"><span class="glyphicon glyphicon-plus-sign"></span></a></td>
 				</tr>
 				{% endfor %}
 			</table>
@@ -240,13 +254,18 @@ function initMap() {
 		</div>
 		</div> <!-- end of right -->
 		<div id="past">
-			<h1>Past Destinations</h1>
+			<h1>Places Visited</h1>
 			<table class="table table-hover">
 				<tr>
-					<th>Meeting Place</th>
-					<th>Creator Name</th>
-					<th>When visited</th>
+					<th>Meeting Spot(s)</th>
+					<th>Date scheduled</th>
 				</tr>
+				{% for place in places %}
+				<tr>
+					<td>{{place['address']}}</td>
+					<td>{{place['created_at']}}</td>
+				</tr>
+				{% endfor %}
 			</table>
 		</div>
 	</div> <!-- end of wrapper -->

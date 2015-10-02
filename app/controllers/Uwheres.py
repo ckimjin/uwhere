@@ -16,11 +16,17 @@ class Uwheres(Controller):
 			session.pop('name')
 		else:
 			pass
+		if 'friendsList' in session:
+			session.pop('friendsList')
+		if 'friendsList' not in session:
+			session['friendsList'] = []
 		return self.load_view('index.html')
 
 	def profile(self, id):
 		friends = self.models['Uwhere'].friends_list()
-		return self.load_view('profile.html', friends = friends)
+		places = self.models['Uwhere'].get_places(id)
+		print places
+		return self.load_view('profile.html', places = places, friends = friends, friendsList = session['friendsList'])
 
 	def login_page(self):
 		return self.load_view('login.html')
@@ -67,14 +73,27 @@ class Uwheres(Controller):
 	def logout(self):
 		return redirect('/')
 
-	def sendMessage(self):
-		# friendsList = [int(request.form['number'])]
-		# message = request.form['message']
+	def add(self, phone):
+		phone = phone
 		id = str(session['id'])
-		friendsList =[request.form['numbers']]
+		session['friendsList'].append(int(phone))
+		return redirect('/uwhere/' + id)
+
+	def sendMessage(self, id):
+		Flist = []
+		Flist = session['friendsList']
+		place = {
+			'place': request.form['message'],
+			'id': id
+		}
+		print place
+		self.models['Uwhere'].add_place(place)
+		id = str(session['id'])
+		friendsList = [request.form['numbers']]
 		outgoing = "+17346220925"
 		message = request.form['message']
-		for friend in friendsList:
+		for friend in Flist:
 			client.messages.create(body = message, to = friend, from_ = outgoing)
+		session['friendsList'] = []
 		return redirect ('/uwhere/' + id)
-		# sendMessage(outgoing, friendsList, message)
+ 

@@ -51,4 +51,12 @@ class Uwhere(Model):
 			return {'status': False, 'errors': errors}
 
 	def friends_list(self):
-		return self.db.query_db("SELECT * FROM users ORDER BY name DESC")
+		return self.db.query_db("SELECT * FROM users ORDER BY name")
+
+	def get_places(self, id):
+		query = "SELECT * FROM users LEFT JOIN places ON users.id = places.user_id WHERE users.id = '{}'".format(id)
+		return self.db.query_db(query)
+
+	def add_place(self, place):
+		query = "INSERT INTO places (address, created_at, user_id) VALUES ('{}', NOW(), '{}')".format(place['place'], place['id'])
+		return self.db.query_db(query)
